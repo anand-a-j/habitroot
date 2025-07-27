@@ -1,0 +1,62 @@
+name: habitroot
+description: >
+  HabitRoot - This is not a habit tracker. 
+  This is your second brain for building the life you want. 
+  A calming, rewarding, minimal space to build habits without burnout.
+
+publish_to: 'none' # Prevent accidental publishing to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  go_router: ^14.8.1
+  flutter_svg: ^2.2.0
+  emoji_picker_flutter: ^4.3.0
+  simple_heatmap_calendar: ^0.4.0
+  hive_ce: ^2.11.3
+  hive_ce_flutter: ^2.3.1
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+  uuid: ^4.5.1
+  path_provider: ^2.1.5
+  riverpod: ^2.6.1
+  intl: ^0.20.2
+  flutter_riverpod: ^2.6.1
+  dashed_circular_progress_bar: ^0.0.6
+  fl_chart: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  hive_ce_generator: ^1.9.2
+  build_runner: ^2.5.4
+  freezed: ^3.1.0
+  json_serializable: ^6.9.5
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/inter_light.ttf
+          weight: 300
+        - asset: assets/fonts/inter_regular.ttf
+          weight: 400
+        - asset: assets/fonts/inter_medium.ttf
+          weight: 500
+        - asset: assets/fonts/inter_semibold.ttf
+          weight: 600
+        - asset: assets/fonts/inter_bold.ttf
+          weight: 700

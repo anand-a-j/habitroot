@@ -1,0 +1,4 @@
+enum DateEvent {
+  normal,
+  completed,
+}
