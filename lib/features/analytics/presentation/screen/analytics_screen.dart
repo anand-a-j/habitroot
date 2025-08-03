@@ -1,30 +1,46 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:habitroot/core/constants/constants.dart';
+import 'package:habitroot/core/extension/common.dart';
 import 'package:habitroot/features/analytics/presentation/utils/stats_utils.dart';
 import 'package:habitroot/features/analytics/presentation/widgets/overall_info_card.dart';
 import 'package:habitroot/features/analytics/presentation/widgets/strength_line_chart.dart';
+import 'package:habitroot/features/calendar/presentation/habitroot_month_calendar.dart';
 
 import '../../../../core/components/core_components.dart';
+import '../../../habit/domain/habit.dart';
 import '../../../habit/presentation/provider/habit_provider.dart';
 import '../widgets/strength_card.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
-  const AnalyticsScreen({super.key});
+  const AnalyticsScreen({
+    this.habit,
+    Key? key,
+  }) : super(key: key);
+
+  /// If [habit] is null, show overall analytics; otherwise show single habit analytics.
+  final Habit? habit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habits = ref.watch(
-      habitProvider.select(
-        (map) {
-          final habits = map.values.where((habit) => !habit.isArchived).toList()
-            ..sort((a, b) => a.order.compareTo(b.order));
+    log("passing habit ; ${habit?.name}");
+    // Determine metrics source
+    final isSingle = habit != null;
+    final displayHabits = isSingle
+        ? [habit!]
+        : ref.watch(
+            habitProvider.select(
+              (map) {
+                final list = map.values.where((h) => !h.isArchived).toList()
+                  ..sort((a, b) => a.order.compareTo(b.order));
+                return list;
+              },
+            ),
+          );
 
-          return habits;
-        },
-      ),
-    );
     return Scaffold(
       appBar: HabitRootAppBar(
         leadingOnTap: () => context.pop(),
@@ -38,7 +54,9 @@ class AnalyticsScreen extends ConsumerWidget {
         ),
         physics: const BouncingScrollPhysics(),
         children: [
-          StrengthCard(habits: habits),
+          StrengthCard(
+            strength: StatsUtils.calOverallStrength(displayHabits),
+          ),
           const SizedBox(height: AppConsts.pMedium),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,14 +65,15 @@ class AnalyticsScreen extends ConsumerWidget {
               Expanded(
                 child: OverallInfoCard(
                   title: "Total Completion",
-                  value: StatsUtils.calTotalCompletion(habits).toString(),
+                  value:
+                      StatsUtils.calTotalCompletion(displayHabits).toString(),
                 ),
               ),
               Expanded(
                 child: OverallInfoCard(
                   title: "Consistency",
                   value:
-                      "${StatsUtils.calConsistencyPercentage(habits).toStringAsFixed(2)}%",
+                      "${StatsUtils.calConsistencyPercentage(displayHabits).toStringAsFixed(2)}%",
                 ),
               ),
             ],
@@ -67,19 +86,55 @@ class AnalyticsScreen extends ConsumerWidget {
               Expanded(
                 child: OverallInfoCard(
                   title: "Current Streak",
-                  value: "${StatsUtils.calOverallCurrentStreak(habits)} days",
+                  value:
+                      "${StatsUtils.calOverallCurrentStreak(displayHabits)} days",
                 ),
               ),
               Expanded(
                 child: OverallInfoCard(
                   title: "Best Streak",
-                  value: "${StatsUtils.calOverallBestStreak(habits)} days",
+                  value:
+                      "${StatsUtils.calOverallBestStreak(displayHabits)} days",
                 ),
               ),
             ],
           ),
+          const SizedBox(height: AppConsts.pSide),
+          Text(
+            "Habit Heatmap",
+            style: context.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: AppConsts.pMedium),
-          StrengthLineChart(habits: habits)
+          Container(
+            padding: const EdgeInsets.all(AppConsts.pMedium),
+            decoration: BoxDecoration(
+              color: context.onSecondary,
+              borderRadius: BorderRadius.circular(AppConsts.rSmall),
+              border: Border.all(
+                width: 1,
+                color: context.onSecondaryContainer,
+              ),
+            ),
+            child: HabitRootMonthCalendar(
+              selectedDay: DateTime.now(),
+              changeDay: (date, event) {},
+              startDate: DateTime.now(),
+              endDate: DateTime.now(),
+              events: [],
+            ),
+          ),
+          const SizedBox(height: AppConsts.pSide),
+          Text(
+            "Average Strength",
+            style: context.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: AppConsts.pMedium),
+          StrengthLineChart(habits: displayHabits),
+          const SizedBox(height: AppConsts.pMedium),
         ],
       ),
     );

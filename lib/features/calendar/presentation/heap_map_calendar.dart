@@ -10,12 +10,13 @@ class HeatMapCalendar extends StatefulWidget {
   final List<CalendarEvent> events;
   final Color baseColor;
 
-  const HeatMapCalendar(
-      {super.key,
-      required this.startDate,
-      required this.endDate,
-      required this.events,
-      this.baseColor = AppColorScheme.primary});
+  const HeatMapCalendar({
+    super.key,
+    required this.startDate,
+    required this.endDate,
+    required this.events,
+    this.baseColor = AppColorScheme.primary,
+  });
 
   @override
   State<HeatMapCalendar> createState() => _HeatMapCalendarState();

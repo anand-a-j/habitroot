@@ -11,24 +11,23 @@ import '../../../core/utils/responsive_layout.dart';
 import '../domain/calendar_event.dart';
 
 class HabitRootMonthCalendar extends StatefulWidget {
-  const HabitRootMonthCalendar({
-    super.key,
-    required this.selectedDay,
-    required this.changeDay,
-    this.weekdays = const [
-      'Sun',
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-    ],
-    required this.startDate,
-    required this.endDate,
-    required this.events,
-    this.baseColor = AppColorScheme.primary
-  });
+  const HabitRootMonthCalendar(
+      {super.key,
+      required this.selectedDay,
+      required this.changeDay,
+      this.weekdays = const [
+        'Sun',
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+      ],
+      required this.startDate,
+      required this.endDate,
+      required this.events,
+      this.baseColor = AppColorScheme.primary});
 
   final DateTime selectedDay;
   final Function(DateTime date, DateEvent event) changeDay;
@@ -226,9 +225,9 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
       child: AspectRatio(
         aspectRatio: 1,
         child: Container(
-          height: 40,
-          width: 40,
-          margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+          height: 35,
+          width: 35,
+          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           // padding: EdgeInsets.all(_isSmallWidth ? 3 : 4),
           decoration: BoxDecoration(
             color: event.event == DateEvent.completed

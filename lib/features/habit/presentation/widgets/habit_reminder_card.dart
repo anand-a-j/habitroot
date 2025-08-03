@@ -44,7 +44,10 @@ class _HabitReminderCardState extends State<HabitReminderCard>
       valueListenable: _isReminderOn,
       builder: (context, isOn, _) {
         return Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 5,
+          ),
           decoration: BoxDecoration(
             color: context.onSecondary,
             borderRadius: BorderRadius.circular(AppConsts.rSmall),
@@ -66,7 +69,7 @@ class _HabitReminderCardState extends State<HabitReminderCard>
                   children: [
                     Text(
                       "Reminder",
-                      style: context.bodyLarge?.copyWith(
+                      style: context.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -76,7 +79,7 @@ class _HabitReminderCardState extends State<HabitReminderCard>
                         value: isOn,
                         onChanged: (value) {
                           _isReminderOn.value = value;
-                          widget.onToggle(value); 
+                          widget.onToggle(value);
                         },
                       ),
                     ),

@@ -1,6 +1,7 @@
 import '../../../habit/domain/habit.dart';
 
 class StatsUtils {
+
   static int calOverallStrength(List<Habit> habits) {
     if (habits.isEmpty) return 0;
 

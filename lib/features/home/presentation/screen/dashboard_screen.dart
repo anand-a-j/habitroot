@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/extension/common.dart';
 
+import '../widgets/dash_add_habit_button.dart';
 import '../widgets/habit_listview.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -17,42 +20,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Hero(
-          tag: 'app-logo-hero-tag',
-          child: const SvgBuild(assetImage: Assets.habitRoot),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              context.pushNamed('analytics-screen');
-            },
-            child: SvgBuild(
-              assetImage: Assets.analytics,
-            ),
+        appBar: AppBar(
+          title: Hero(
+            tag: 'app-logo-hero-tag',
+            child: const SvgBuild(assetImage: Assets.habitRoot),
           ),
-          const SizedBox(width: AppConsts.pMedium),
-          GestureDetector(
-            onTap: () {
-              context.pushNamed('settings-screen');
-            },
-            child: SvgBuild(
-              assetImage: Assets.settings,
+          actions: [
+            GestureDetector(
+              onTap: () {
+                context.pushNamed('analytics-screen');
+              },
+              child: SvgBuild(
+                assetImage: Assets.analytics,
+              ),
             ),
-          ),
-          const SizedBox(width: AppConsts.pSide),
-        ],
-      ),
-      body: HabitListView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.pushNamed('habit-add-screen');
-        },
-        child: Icon(
-          Icons.add,
-          color: context.onPrimary,
+            const SizedBox(width: AppConsts.pMedium),
+            GestureDetector(
+              onTap: () {
+                context.pushNamed('settings-screen');
+              },
+              child: SvgBuild(
+                assetImage: Assets.settings,
+              ),
+            ),
+            const SizedBox(width: AppConsts.pSide),
+          ],
         ),
-      ),
-    );
+        body: HabitListView(),
+        floatingActionButton: DashAddHabitButton()
+        );
   }
 }

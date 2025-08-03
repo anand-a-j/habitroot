@@ -42,7 +42,7 @@ class HabitHeapCard extends ConsumerWidget {
     final oneYearAgo = now.subtract(const Duration(days: 365));
     final startDate =
         habit.createdAt.isBefore(oneYearAgo) ? habit.createdAt : oneYearAgo;
-
+    log("habit color : ${habit.color}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppConsts.pSide),
       child: GestureDetector(
@@ -71,12 +71,11 @@ class HabitHeapCard extends ConsumerWidget {
                         ? CrossAxisAlignment.start
                         : CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: habitColor != null
-                            ? Color(habitColor).withValues(alpha: 0.2)
-                            : context.primary.withValues(alpha: 0.2),
-                        radius: 20,
-                        child: Text(habit.icon),
+                      Text(
+                        habit.icon,
+                        style: TextStyle(
+                          fontSize: 24,
+                        ),
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.min,
@@ -108,22 +107,17 @@ class HabitHeapCard extends ConsumerWidget {
                       ),
                       const Spacer(),
                       _HabitMarkButton(
-                        backgroundColor: habitColor != null
-                            ? Color(habitColor)
-                            : context.primary,
+                        backgroundColor: Color(habitColor),
                         habitId: habit.id,
                       ),
                     ],
                   ),
                   const SizedBox(height: AppConsts.pMedium),
                   HeatMapCalendar(
-                    startDate: startDate,
-                    endDate: DateTime.now(),
-                    events: events,
-                    baseColor: habitColor != null
-                        ? Color(habitColor)
-                        : context.primary,
-                  ),
+                      startDate: startDate,
+                      endDate: DateTime.now(),
+                      events: events,
+                      baseColor: Color(habitColor)),
                 ],
               ),
             ),
@@ -165,7 +159,7 @@ class _HabitMarkButton extends ConsumerWidget {
           color: isCompletedToday
               ? backgroundColor
               : backgroundColor.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(AppConsts.rMacro),
         ),
         child: const Center(
           child: SvgBuild(assetImage: Assets.tick),

@@ -7,13 +7,12 @@ import 'package:habitroot/features/analytics/presentation/utils/stats_utils.dart
 import '../../../habit/domain/habit.dart';
 
 class StrengthCard extends StatelessWidget {
-  const StrengthCard({super.key,required this.habits});
+  const StrengthCard({super.key, required this.strength});
 
-  final List<Habit> habits;
+  final int strength;
 
   @override
   Widget build(BuildContext context) {
-    final strength = StatsUtils.calOverallStrength(habits);
     return Container(
       padding: const EdgeInsets.all(AppConsts.pMedium),
       decoration: BoxDecoration(

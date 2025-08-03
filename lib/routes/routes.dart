@@ -79,12 +79,13 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/analytics',
       name: 'analytics-screen',
-      pageBuilder: (BuildContext context, GoRouterState state) {
+      path: '/analytics',
+      pageBuilder: (context, state) {
+        final habit = state.extra as Habit?;
         return SlideTransitionPage(
-          page: AnalyticsScreen(),
-          beginOffset: const Offset(0.0, 1.0),
+          page: AnalyticsScreen(habit: habit),
+          beginOffset: const Offset(0, 1),
         );
       },
     ),

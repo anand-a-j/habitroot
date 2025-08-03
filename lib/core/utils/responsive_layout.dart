@@ -42,6 +42,6 @@ class ResponsiveLayout {
 
     // 3️⃣ Total = header + (6 rows × cell height)
     const int totalRows = 6;
-    return (headerHeight + (totalRows * cellHeight)) + 158;
+    return (headerHeight + (totalRows * cellHeight)) + 158 - 50;
   }
 }

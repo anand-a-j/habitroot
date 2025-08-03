@@ -92,14 +92,6 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
           key: _formKey,
           child: Column(
             children: [
-              const SizedBox(height: AppConsts.pLarge),
-              // HabitEmojiPicker(
-              //   initialEmojiString: widget.isEdit ? widget.habit?.icon : null,
-              //   onEmojiSelected: (emoji) {
-              //     _habitIcon = emoji.emoji;
-              //   },
-              // ),
-              const SizedBox(height: AppConsts.pLarge),
               HabitRootTextField(
                 controller: _nameController,
                 hintText: nameYourHabit,
@@ -213,7 +205,7 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
                               child: Center(
                                 child: Text(
                                   _habitIcon,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 26,
                                     height: 1,
                                   ),
@@ -240,16 +232,7 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: AppConsts.pLarge),
-              // HabitColorPicker(
-              //   initialColorString: widget.isEdit ? widget.habit?.color : null,
-              //   onColorSelected: (color) {
-              //     _habitColor = color;
-
-              //     log("_habitColor = ${_habitColor}");
-              //   },
-              // ),
-              const SizedBox(height: AppConsts.pLarge),
+              const SizedBox(height: AppConsts.pMedium),
               HabitReminderCard(
                 selectedDays: _reminderDays.value,
                 onChange: (weekdays) => _reminderDays.value = weekdays,
@@ -296,7 +279,7 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
         id: habitId,
         name: name,
         description: des,
-        color: 123,
+        color: _habitColor,
         icon: _habitIcon,
         createdAt: widget.isEdit ? widget.habit!.createdAt : DateTime.now(),
         // Pass reminder here if you've added it to Habit model

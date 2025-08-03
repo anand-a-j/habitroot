@@ -5,70 +5,40 @@ import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/extension/color_extension.dart';
 
-enum QuickButtonType { achieve, edit, done }
 
 class HabitSheetQuickButton extends StatelessWidget {
-  final QuickButtonType type;
+  final String icon;
   void Function()? onTap;
-  final bool isCompleted;
 
   HabitSheetQuickButton({
     super.key,
-    required this.type,
+    required this.icon,
     this.onTap,
-    this.isCompleted = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor;
-    final String icon;
-
-    switch (type) {
-      case QuickButtonType.achieve:
-        backgroundColor = Colors.orange;
-        break;
-      case QuickButtonType.edit:
-        backgroundColor = Colors.blue;
-        break;
-      case QuickButtonType.done:
-        backgroundColor = Colors.green;
-        break;
-    }
-
-    switch (type) {
-      case QuickButtonType.achieve:
-        icon = Assets.archive;
-        break;
-      case QuickButtonType.edit:
-        icon = Assets.pencil;
-        break;
-      case QuickButtonType.done:
-        icon = Assets.tick;
-        break;
-    }
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 40,
+        height: 35,
+        width: 35,
+        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: QuickButtonType.done == type && isCompleted
-              ? backgroundColor
-              : backgroundColor.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(AppConsts.rSmall),
+          color: context.secondary,
+          borderRadius: BorderRadius.circular(AppConsts.rMicro),
           border: Border.all(
             width: 1,
-            color: backgroundColor,
+            color: context.onSecondaryContainer,
           ),
         ),
         alignment: Alignment.center,
         child: SvgBuild(
           assetImage: icon,
+          height: 24,
+          width: 24,
           colorFilter: ColorFilter.mode(
-            QuickButtonType.done == type && isCompleted
-                ? context.onPrimary
-                : backgroundColor,
+            context.onPrimary.withValues(alpha: 0.5),
             BlendMode.srcIn,
           ),
         ),

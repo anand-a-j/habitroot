@@ -15,7 +15,7 @@ class StrengthLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final strengthEntries = _getStrengthOverLastNDays(habits, 90);
+    final strengthEntries = _getStrengthOverLastNDays(habits, 30);
 
     final List<FlSpot> spots = strengthEntries
         .asMap()
