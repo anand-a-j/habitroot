@@ -74,17 +74,7 @@ extension StringToTimeOfDay on String {
     );
   }
 
-  /// Parses 'hh:mm a' format (e.g. '08:30 PM') to TimeOfDay
-  TimeOfDay toTimeOfDayFrom12Hour() {
-    final dt = DateFormat('hh:mm a').parse(this);
-    return TimeOfDay(hour: dt.hour, minute: dt.minute);
-  }
+
 }
 
-extension EpochToTimeOfDay on int {
-  /// Converts millisecondsSinceEpoch to TimeOfDay
-  TimeOfDay toTimeOfDay() {
-    final dt = DateTime.fromMillisecondsSinceEpoch(this);
-    return TimeOfDay(hour: dt.hour, minute: dt.minute);
-  }
-}
+

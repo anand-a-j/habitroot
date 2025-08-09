@@ -13,6 +13,7 @@ import 'package:habitroot/features/calendar/presentation/habitroot_month_calenda
 import '../../../../core/components/core_components.dart';
 import '../../../habit/domain/habit.dart';
 import '../../../habit/presentation/provider/habit_provider.dart';
+import '../widgets/heat_map_calender.dart';
 import '../widgets/strength_card.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
@@ -107,36 +108,20 @@ class AnalyticsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppConsts.pMedium),
-          Container(
-            padding: const EdgeInsets.all(AppConsts.pMedium),
-            decoration: BoxDecoration(
-              color: context.onSecondary,
-              borderRadius: BorderRadius.circular(AppConsts.rSmall),
-              border: Border.all(
-                width: 1,
-                color: context.onSecondaryContainer,
-              ),
-            ),
-            child: HabitRootMonthCalendar(
-              selectedDay: DateTime.now(),
-              changeDay: (date, event) {},
-              startDate: DateTime.now(),
-              endDate: DateTime.now(),
-              events: [],
-            ),
-          ),
+          HeatMapCalender(habits: displayHabits),
           const SizedBox(height: AppConsts.pSide),
-          Text(
-            "Average Strength",
-            style: context.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: AppConsts.pMedium),
-          StrengthLineChart(habits: displayHabits),
-          const SizedBox(height: AppConsts.pMedium),
+          // Text(
+          //   "Average Strength",
+          //   style: context.bodyMedium?.copyWith(
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          // ),
+          // const SizedBox(height: AppConsts.pMedium),
+          // StrengthLineChart(habits: displayHabits),
+          // const SizedBox(height: AppConsts.pMedium),
         ],
       ),
     );
   }
 }
+

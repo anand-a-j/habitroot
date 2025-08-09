@@ -1,7 +1,8 @@
+import '../../../../core/enum/date_event.dart';
+import '../../../calendar/domain/calendar_event.dart';
 import '../../../habit/domain/habit.dart';
 
 class StatsUtils {
-
   static int calOverallStrength(List<Habit> habits) {
     if (habits.isEmpty) return 0;
 
@@ -113,5 +114,59 @@ class StatsUtils {
     return bestStreak;
   }
 
+  static List<CalendarEvent> getCalendarEvents(List<Habit> habits) {
+    // Map to hold completion count for each date
+    final Map<DateTime, int> completionCount = {};
 
+    for (final habit in habits) {
+      for (final date in habit.completedDates) {
+        // Normalize to only year, month, day (ignore time)
+        final dayKey = DateTime(date.year, date.month, date.day);
+        completionCount[dayKey] = (completionCount[dayKey] ?? 0) + 1;
+      }
+    }
+
+    // Determine max completions in a day for scaling
+    final int maxCount = completionCount.values.isEmpty
+        ? 0
+        : completionCount.values.reduce((a, b) => a > b ? a : b);
+
+    // Convert to list of CalendarEvent
+    return completionCount.entries.map((entry) {
+      final date = entry.key;
+      final count = entry.value;
+
+      return CalendarEvent(
+        date: date,
+        event: _mapCountToEvent(count, maxCount),
+      );
+    }).toList();
+  }
+
+  static DateEvent _mapCountToEvent(int count, int totalHabits) {
+    if (count <= 0) return DateEvent.normal;
+    if (totalHabits <= 0) return DateEvent.normal;
+
+    final ratio = count / totalHabits;
+
+    if (ratio <= 0.25) return DateEvent.low;
+    if (ratio <= 0.5) return DateEvent.medium;
+    if (ratio <= 0.75) return DateEvent.high;
+    if (ratio > 0.75 && ratio < 1.0) return DateEvent.veryHigh;
+    if (ratio == 1.0) return DateEvent.completed;
+
+    return DateEvent.normal;
+  }
+
+  // static DateEvent _mapCountToEvent(int count, int maxCount) {
+  //   if (count <= 0) return DateEvent.normal;
+
+  //   // If you want fixed thresholds instead of scaling
+  //   if (count == 1) return DateEvent.low;
+  //   if (count == 2) return DateEvent.medium;
+  //   if (count == 3) return DateEvent.high;
+  //   if (count >= 4) return DateEvent.veryHigh;
+
+  //   return DateEvent.normal;
+  // }
 }

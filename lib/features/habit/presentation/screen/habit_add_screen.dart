@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,13 +11,14 @@ import 'package:habitroot/core/theme/app_color_scheme.dart';
 import 'package:habitroot/core/utils/input_vaildator.dart';
 import 'package:habitroot/features/habit/domain/habit.dart';
 import 'package:habitroot/features/habit/presentation/provider/habit_provider.dart';
-import 'package:habitroot/features/habit/presentation/widgets/habit_color_picker.dart';
+
 import 'package:habitroot/features/habit/presentation/widgets/habit_reminder_card.dart';
 import 'package:habitroot/features/habit/presentation/widgets/icon_color_pciker_sheet.dart';
+import 'package:habitroot/features/notification/data/notification_service.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/components/core_components.dart';
 import '../../../../core/enum/weekday.dart';
-import '../../../../core/utils/string_utils.dart';
+
 import '../../../notification/domain/reminder.dart';
 import '../widgets/habit_emoji_picker.dart';
 
@@ -50,9 +50,12 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
   final ValueNotifier<List<Weekday>> _reminderDays =
       ValueNotifier(List<Weekday>.from(Weekday.values)); // all days
 
+  late NotificationService _notiService;
+
   @override
   void initState() {
     super.initState();
+    _notiService = NotificationService();
     if (widget.isEdit && widget.habit != null) {
       _initEditData(widget.habit!);
     }
@@ -258,11 +261,12 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
       final name = _nameController.text.trim();
       final des = _desController.text;
 
-      final uuid = const Uuid();
+      const uuid = Uuid();
       final habitId = widget.isEdit ? widget.habit!.id : uuid.v4();
 
       // Create reminder only if enabled
       Reminder? reminder;
+
       if (_isReminderOn.value) {
         reminder = Reminder(
           id: uuid.v4(),
@@ -271,9 +275,19 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
           days: _reminderDays.value,
           isEnabled: true,
         );
-      }
 
-      print("reminder : ${reminder}");
+        final hour = _reminderTime.value.hour;
+        final minute = _reminderTime.value.minute;
+
+        _notiService.scheduleWeekdayReminder(
+          id: int.parse(habitId),
+          title: "Habit Reminder",
+          body: name,
+          hour: hour,
+          minute: minute,
+          weekdays: weekdaysToInts(_reminderDays.value),
+        );
+      } 
 
       final habit = Habit(
         id: habitId,
@@ -282,8 +296,7 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
         color: _habitColor,
         icon: _habitIcon,
         createdAt: widget.isEdit ? widget.habit!.createdAt : DateTime.now(),
-        // Pass reminder here if you've added it to Habit model
-        reminder: reminder, // ✅ make sure your Habit model accepts this
+        reminder: reminder,
       );
 
       if (widget.isEdit) {

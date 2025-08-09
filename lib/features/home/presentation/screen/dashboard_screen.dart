@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/extension/common.dart';
+import 'package:habitroot/features/notification/data/notification_service.dart';
 
 import '../widgets/dash_add_habit_button.dart';
 import '../widgets/habit_listview.dart';
@@ -26,6 +27,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: const SvgBuild(assetImage: Assets.habitRoot),
           ),
           actions: [
+            // GestureDetector(
+            //     onTap: () {
+            //       NotificationService.showTestNotification();
+            //     },
+            //     child: Icon(
+            //       Icons.add,
+            //       color: context.onPrimary,
+            //     )),
+            // const SizedBox(width: 40),
             GestureDetector(
               onTap: () {
                 context.pushNamed('analytics-screen');
@@ -47,7 +57,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
         body: HabitListView(),
-        floatingActionButton: DashAddHabitButton()
-        );
+        floatingActionButton: DashAddHabitButton());
   }
 }

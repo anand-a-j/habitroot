@@ -4,8 +4,10 @@ import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/enum/weekday.dart';
 import 'package:habitroot/core/extension/common.dart';
+import 'package:habitroot/core/utils/snackbar_manager.dart';
+import 'package:habitroot/features/habit/presentation/utils/habit_utils.dart';
+import 'package:habitroot/features/notification/data/notification_service.dart';
 import '../../../../core/components/weekday_listview.dart';
-import '../../../../core/constants/app_constants.dart';
 
 class HabitReminderCard extends StatefulWidget {
   const HabitReminderCard({
@@ -77,9 +79,18 @@ class _HabitReminderCardState extends State<HabitReminderCard>
                       scale: 0.8,
                       child: CupertinoSwitch(
                         value: isOn,
-                        onChanged: (value) {
-                          _isReminderOn.value = value;
-                          widget.onToggle(value);
+                        onChanged: (value) async {
+                          final granted =
+                              await NotificationService.requestNotificationPermission();
+
+                          if (granted) {
+                            _isReminderOn.value = value;
+                            widget.onToggle(value);
+                          } else {
+                            Snack.error(
+                              "Please enable notifications in settings",
+                            );
+                          }
                         },
                       ),
                     ),
