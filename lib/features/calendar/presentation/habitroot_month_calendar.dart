@@ -75,7 +75,8 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: ResponsiveLayout.calendarHeightEQ(context),
+      // height: ResponsiveLayout.calendarHeightEQ(context),
+      height: 390,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -176,19 +177,18 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
             widget.startDate.year, widget.startDate.month + monthIndex + 1, 0)
         .day;
 
-    int firstWeekday = firstDayOfMonth.weekday % 7;
-    List<Widget> weeks = [];
+    // Step 1: Find the first visible day (Sunday)
+    int firstWeekday = firstDayOfMonth.weekday % 7; // 0=Sunday
+    DateTime firstVisibleDay =
+        firstDayOfMonth.subtract(Duration(days: firstWeekday));
 
+    // Step 2: Generate 42 days (6 weeks)
+    List<Widget> weeks = [];
     List<Widget> currentWeek = [];
 
-    for (int i = 0; i < firstWeekday; i++) {
-      currentWeek.add(const Expanded(child: SizedBox.shrink()));
-    }
-
-    for (int day = 1; day <= daysInMonth; day++) {
-      final DateTime dateTime =
-          DateTime(firstDayOfMonth.year, firstDayOfMonth.month, day);
-      currentWeek.add(Expanded(child: _dateButton(dateTime)));
+    for (int i = 0; i < 42; i++) {
+      DateTime day = firstVisibleDay.add(Duration(days: i));
+      currentWeek.add(Expanded(child: _dateButton(day)));
 
       if (currentWeek.length == 7) {
         weeks.add(Row(children: currentWeek));
@@ -196,14 +196,8 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
       }
     }
 
-    if (currentWeek.isNotEmpty) {
-      while (currentWeek.length < 7) {
-        currentWeek.add(const Expanded(child: SizedBox.shrink()));
-      }
-      weeks.add(Row(children: currentWeek));
-    }
-
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: weeks,
     );
   }
@@ -225,32 +219,32 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
       onTap: () {
         widget.changeDay(dateTime, event.event);
       },
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: Container(
-          height: 35,
-          width: 35,
-          margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          // padding: EdgeInsets.all(_isSmallWidth ? 3 : 4),
-          decoration: BoxDecoration(
-            color: getHeatmapColor(event.event, widget.baseColor),
-            borderRadius: BorderRadius.circular(50),
-            border: widget.isHeatMap
-                ? null
-                : event.event == DateEvent.completed || isSelected
-                    ? Border.all(
-                        width: 1,
-                        color: widget.baseColor,
-                      )
-                    : null,
-          ),
-          child: Center(
-            child: _EventDayCard(
-              event: event,
-              weekday: weekday,
-              dateTime: dateTime,
-              isSelected: isSelected,
-            ),
+      child: Container(
+        height: 40,
+        width: 40,
+        constraints: BoxConstraints(
+          maxWidth: 40,
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        // padding: EdgeInsets.all(_isSmallWidth ? 3 : 4),
+        decoration: BoxDecoration(
+          color: getHeatmapColor(event.event, widget.baseColor),
+          borderRadius: BorderRadius.circular(50),
+          border: widget.isHeatMap
+              ? null
+              : event.event == DateEvent.completed || isSelected
+                  ? Border.all(
+                      width: 1,
+                      color: widget.baseColor,
+                    )
+                  : null,
+        ),
+        child: Center(
+          child: _EventDayCard(
+            event: event,
+            weekday: weekday,
+            dateTime: dateTime,
+            isSelected: isSelected,
           ),
         ),
       ),
