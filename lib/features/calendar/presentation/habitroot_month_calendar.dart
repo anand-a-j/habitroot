@@ -7,7 +7,6 @@ import 'package:habitroot/core/theme/app_color_scheme.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/enum/date_event.dart';
-import '../../../core/utils/responsive_layout.dart';
 import '../domain/calendar_event.dart';
 
 class HabitRootMonthCalendar extends StatefulWidget {
@@ -58,7 +57,6 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
     _currentPageNotifier =
         ValueNotifier<int>(_getPageIndexForDate(widget.selectedDay));
 
-    // Listen to page changes
     _controller.addListener(() {
       final int currentPage = _controller.page!.round();
       _currentPageNotifier.value = currentPage;
@@ -188,7 +186,9 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
 
     for (int i = 0; i < 42; i++) {
       DateTime day = firstVisibleDay.add(Duration(days: i));
-      currentWeek.add(Expanded(child: _dateButton(day)));
+      bool isInCurrentMonth = (day.month == firstDayOfMonth.month &&
+          day.year == firstDayOfMonth.year);
+      currentWeek.add(Expanded(child: _dateButton(day, isInCurrentMonth)));
 
       if (currentWeek.length == 7) {
         weeks.add(Row(children: currentWeek));
@@ -202,7 +202,7 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
     );
   }
 
-  Widget _dateButton(DateTime dateTime) {
+  Widget _dateButton(DateTime dateTime, bool isInCurrentMonth) {
     final _width = MediaQuery.sizeOf(context).width;
     final _isSmallWidth = _width < 380;
 
@@ -217,27 +217,31 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
 
     return GestureDetector(
       onTap: () {
-        widget.changeDay(dateTime, event.event);
+        bool isFutureDate = dateTime.isAfter(DateTime.now());
+        if (!isFutureDate && isInCurrentMonth) {
+          widget.changeDay(dateTime, event.event);
+        }
       },
       child: Container(
         height: 40,
         width: 40,
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxWidth: 40,
         ),
         margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        // padding: EdgeInsets.all(_isSmallWidth ? 3 : 4),
         decoration: BoxDecoration(
           color: getHeatmapColor(event.event, widget.baseColor),
           borderRadius: BorderRadius.circular(50),
-          border: widget.isHeatMap
-              ? null
-              : event.event == DateEvent.completed || isSelected
-                  ? Border.all(
-                      width: 1,
-                      color: widget.baseColor,
-                    )
-                  : null,
+          border: isInCurrentMonth
+              ? widget.isHeatMap
+                  ? null
+                  : event.event == DateEvent.completed || isSelected
+                      ? Border.all(
+                          width: 1,
+                          color: widget.baseColor,
+                        )
+                      : null
+              : null,
         ),
         child: Center(
           child: _EventDayCard(
@@ -245,6 +249,7 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
             weekday: weekday,
             dateTime: dateTime,
             isSelected: isSelected,
+            isInCurrentMonth: isInCurrentMonth,
           ),
         ),
       ),
@@ -255,7 +260,7 @@ class _HabitRootMonthCalendarState extends State<HabitRootMonthCalendar> {
     int totalMonths = widget.endDate.month -
         widget.startDate.month +
         (12 * (widget.endDate.year - widget.startDate.year));
-    return totalMonths + 1; // Include the last month
+    return totalMonths + 1;
   }
 
   int _getPageIndexForDate(DateTime date) {
@@ -271,12 +276,14 @@ class _EventDayCard extends StatelessWidget {
   final String weekday;
   final DateTime dateTime;
   final bool isSelected;
+  final bool isInCurrentMonth;
 
   const _EventDayCard({
     required this.event,
     required this.weekday,
     required this.dateTime,
     required this.isSelected,
+    required this.isInCurrentMonth,
   });
 
   @override
@@ -285,7 +292,10 @@ class _EventDayCard extends StatelessWidget {
       default:
         return Text(
           '${dateTime.day}',
-          style: context.bodyMedium?.copyWith(),
+          style: context.bodyMedium?.copyWith(
+              color: isInCurrentMonth
+                  ? context.onPrimary
+                  : context.onPrimary.withValues(alpha: 0.5)),
         );
     }
   }

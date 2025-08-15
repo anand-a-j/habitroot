@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +14,7 @@ import '../../../../core/enum/date_event.dart';
 import '../../../../core/utils/responsive_layout.dart';
 import '../../../calendar/domain/calendar_event.dart';
 import '../../../habit/presentation/provider/habit_provider.dart';
-import '../components/habit_sheet_quick_button.dart';
+import 'habit_sheet_quick_button.dart';
 
 void showHabitDetailsSheet(BuildContext context, Habit habit) {
   showModalBottomSheet<void>(
@@ -40,10 +38,10 @@ class HabitDetailsSheetCard extends ConsumerWidget {
     final size = MediaQuery.sizeOf(context);
     final habitColor = currentHabit.color;
 
-    // state
-    final isCompletedToday = ref.watch(
-      habitByIdProvider(habit.id).select((h) => h.isCompletedToday),
-    );
+    // // state
+    // final isCompletedToday = ref.watch(
+    //   habitByIdProvider(habit.id).select((h) => h.isCompletedToday),
+    // );
 
     final events = currentHabit.completedDates
         .map((date) => CalendarEvent(
@@ -57,7 +55,7 @@ class HabitDetailsSheetCard extends ConsumerWidget {
     final startDate =
         habit.createdAt.isBefore(oneYearAgo) ? habit.createdAt : oneYearAgo;
     return Container(
-      height: ResponsiveLayout.habitDetailsSheetHeight(context),
+      // height: ResponsiveLayout.habitDetailsSheetHeight(context),
       margin: const EdgeInsets.only(
         left: AppConsts.pSide,
         right: AppConsts.pSide,
@@ -73,10 +71,14 @@ class HabitDetailsSheetCard extends ConsumerWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             spacing: AppConsts.pSmall,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment:
+                habit.description != null && habit.description!.isNotEmpty
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.center,
             children: [
               Text(
                 habit.icon,
@@ -253,13 +255,13 @@ class _HabitDetailsStrengthCard extends StatelessWidget {
             Text(
               "Strength",
               style: context.bodySmall?.copyWith(
-                color: context.onPrimary.withValues(alpha: 0.5),
+                color: context.onPrimary,
               ),
             ),
             Text(
               "$strength%",
               style: context.bodySmall?.copyWith(
-                color: context.onPrimary.withValues(alpha: 0.5),
+                color: context.onPrimary,
               ),
             ),
           ],

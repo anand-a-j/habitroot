@@ -12,7 +12,7 @@ import 'package:habitroot/features/calendar/domain/calendar_event.dart';
 import 'package:habitroot/features/calendar/presentation/heap_map_calendar.dart';
 
 import '../../../habit/presentation/provider/habit_provider.dart';
-import 'habit_details_bottom_sheet.dart';
+import '../components/habit_details_bottom_sheet.dart';
 
 final currentHabitId = Provider<String>((ref) => throw UnimplementedError());
 

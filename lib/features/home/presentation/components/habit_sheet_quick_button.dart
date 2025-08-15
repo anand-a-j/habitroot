@@ -5,12 +5,11 @@ import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/extension/color_extension.dart';
 
-
 class HabitSheetQuickButton extends StatelessWidget {
   final String icon;
-  void Function()? onTap;
+  final void Function()? onTap;
 
-  HabitSheetQuickButton({
+  const HabitSheetQuickButton({
     super.key,
     required this.icon,
     this.onTap,
@@ -38,7 +37,7 @@ class HabitSheetQuickButton extends StatelessWidget {
           height: 24,
           width: 24,
           colorFilter: ColorFilter.mode(
-            context.onPrimary.withValues(alpha: 0.5),
+            context.onPrimary,
             BlendMode.srcIn,
           ),
         ),
