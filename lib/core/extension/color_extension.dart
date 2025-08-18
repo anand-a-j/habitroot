@@ -7,6 +7,7 @@ extension ColorHelper on BuildContext {
   Color get onPrimary => colorScheme.onPrimary;
 
   Color get secondary => colorScheme.secondary;
+  Color get secondaryFixed => colorScheme.secondaryFixed;
   Color get secondaryContainer => colorScheme.secondaryContainer;
 
   Color get onSecondary => colorScheme.onSecondary;

@@ -27,6 +27,13 @@ class SettingsScreen extends StatelessWidget {
             title: generalEn,
           ),
           SettingsCard(
+            leadingIcon: Assets.theme,
+            title: "Theme",
+            onTap: () {
+                      context.pushNamed('theme-screen');
+            },
+          ),
+          SettingsCard(
             leadingIcon: Assets.archive,
             title: arcivedHabitsEn,
             onTap: () {

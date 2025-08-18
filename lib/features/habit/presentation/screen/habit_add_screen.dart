@@ -46,9 +46,11 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
 
   final ValueNotifier<bool> _isReminderOn = ValueNotifier(false);
   final ValueNotifier<TimeOfDay> _reminderTime =
-      ValueNotifier(TimeOfDay(hour: 20, minute: 0)); // 8:00 PM
+      ValueNotifier(TimeOfDay(hour: 20, minute: 0));
   final ValueNotifier<List<Weekday>> _reminderDays =
-      ValueNotifier(List<Weekday>.from(Weekday.values)); // all days
+      ValueNotifier(List<Weekday>.from(Weekday.values));
+
+  final FocusNode _nameFocusNode = FocusNode();
 
   late NotificationService _notiService;
 
@@ -58,6 +60,10 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
     _notiService = NotificationService();
     if (widget.isEdit && widget.habit != null) {
       _initEditData(widget.habit!);
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _nameFocusNode.requestFocus();
+      });
     }
   }
 
@@ -66,10 +72,17 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
     _desController.text = habit.description ?? '';
     _habitIcon = habit.icon;
     _habitColor = habit.color;
+    _isReminderOn.value = habit.reminder != null ? true : false;
+    if (habit.reminder != null) {
+      log("eidt reminer init is working,... ${habit.reminder}");
+      _reminderDays.value = convertIntsToWeekdays(habit.reminder!.weekdays);
+      _reminderTime.value = habit.reminder!.time.toTimeOfDayFrom24Hour();
+    }
   }
 
   @override
   void dispose() {
+    _nameFocusNode.dispose();
     _obscurePassword.dispose();
     _nameController.dispose();
     _desController.dispose();
@@ -95,9 +108,11 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
           key: _formKey,
           child: Column(
             children: [
+              const SizedBox(height: AppConsts.pSide),
               HabitRootTextField(
                 controller: _nameController,
                 hintText: nameYourHabit,
+                focusNode: _nameFocusNode,
                 textInputType: TextInputType.name,
                 validator: (value) => InputVaildator.required(
                   value,
@@ -236,22 +251,48 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
                 ],
               ),
               const SizedBox(height: AppConsts.pMedium),
-              HabitReminderCard(
-                selectedDays: _reminderDays.value,
-                onChange: (weekdays) => _reminderDays.value = weekdays,
-                onTimeChanged: (time) => _reminderTime.value = time,
-                onToggle: (isEnabled) => _isReminderOn.value = isEnabled,
-              ),
+              ValueListenableBuilder(
+                  valueListenable: _isReminderOn,
+                  builder: (context, isReminderOn, child) {
+                    return ValueListenableBuilder(
+                        valueListenable: _reminderDays,
+                        builder: (context, reminderDays, child) {
+                          return ValueListenableBuilder(
+                              valueListenable: _reminderTime,
+                              builder: (context, reminerTime, child) {
+                                return HabitReminderCard(
+                                  initialReminderOn: isReminderOn,
+                                  initialTime: reminerTime,
+                                  selectedDays: reminderDays,
+                                  onChange: (weekdays) =>
+                                      _reminderDays.value = weekdays,
+                                  onTimeChanged: (time) =>
+                                      _reminderTime.value = time,
+                                  onToggle: (isEnabled) =>
+                                      _isReminderOn.value = isEnabled,
+                                );
+                              });
+                        });
+                  }),
             ],
           ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: HabitRootButton(
-        padding: const EdgeInsetsGeometry.all(AppConsts.pSide),
-        label: "Save",
-        onPressed: () => _saveHabit(),
-      ),
+      floatingActionButton: Builder(builder: (context) {
+        final isKeyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+
+        return HabitRootButton(
+          padding: isKeyboardOpen
+              ? const EdgeInsets.symmetric(
+                  horizontal: AppConsts.pSide,
+                  vertical: 0,
+                )
+              : const EdgeInsetsGeometry.all(AppConsts.pSide),
+          label: "Save",
+          onPressed: () => _saveHabit(),
+        );
+      }),
     );
   }
 
@@ -264,30 +305,55 @@ class _HabitAddScreenState extends ConsumerState<HabitAddScreen> {
       const uuid = Uuid();
       final habitId = widget.isEdit ? widget.habit!.id : uuid.v4();
 
-      // Create reminder only if enabled
       Reminder? reminder;
 
+      final hour = _reminderTime.value.hour;
+      final minute = _reminderTime.value.minute;
+
       if (_isReminderOn.value) {
-        reminder = Reminder(
-          id: uuid.v4(),
-          habitId: habitId,
-          time: _reminderTime.value.to24HourString(),
-          days: _reminderDays.value,
-          isEnabled: true,
-        );
+        // is Edit true
+        if (widget.isEdit) {
+          reminder = Reminder(
+            id: widget.habit?.reminder?.id ?? 0,
+            habitId: habitId,
+            time: _reminderTime.value.to24HourString(),
+            weekdays: convertWeekdaysToInts(_reminderDays.value),
+            isEnabled: true,
+          );
 
-        final hour = _reminderTime.value.hour;
-        final minute = _reminderTime.value.minute;
+          _notiService.updateHabitReminder(
+            habit: widget.habit!,
+            title: "Habit Reminder",
+            body: name,
+            hour: hour,
+            minute: minute,
+            weekdays: convertWeekdaysToInts(_reminderDays.value),
+          );
+        } else {
+          final notificationId = DateTime.now().millisecondsSinceEpoch % 100000;
+          reminder = Reminder(
+            id: notificationId,
+            habitId: habitId,
+            time: _reminderTime.value.to24HourString(),
+            weekdays: convertWeekdaysToInts(_reminderDays.value),
+            isEnabled: true,
+          );
 
-        _notiService.scheduleWeekdayReminder(
-          id: int.parse(habitId),
-          title: "Habit Reminder",
-          body: name,
-          hour: hour,
-          minute: minute,
-          weekdays: weekdaysToInts(_reminderDays.value),
-        );
-      } 
+          _notiService.scheduleWeekdayReminder(
+            id: notificationId,
+            title: "Habit Reminder",
+            body: name,
+            hour: hour,
+            minute: minute,
+            weekdays: weekdaysToInts(_reminderDays.value),
+          );
+        }
+      } else {
+        // while updating the habit if the user turn of the reminder then it should be cancel the reminder
+        if (widget.isEdit && widget.habit?.reminder != null) {
+          _notiService.cancelHabitReminders(widget.habit!);
+        }
+      }
 
       final habit = Habit(
         id: habitId,

@@ -19,7 +19,7 @@ class SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 5),
@@ -33,7 +33,7 @@ class SettingsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(
             AppConsts.rSmall,
           ),
-          color: context.secondaryContainer,
+          color: context.secondaryFixed,
         ),
         child: Row(
           children: [

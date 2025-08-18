@@ -5,6 +5,7 @@ class HabitRootTextField extends StatelessWidget {
   const HabitRootTextField({
     super.key,
     required this.controller,
+    this.focusNode,
     this.initialValue,
     this.enabled = true,
     this.readOnly = false,
@@ -25,6 +26,7 @@ class HabitRootTextField extends StatelessWidget {
   });
 
   final TextEditingController? controller;
+  final FocusNode? focusNode;
   final String hintText;
   final TextInputType? textInputType;
   final bool? obscureText;
@@ -47,6 +49,7 @@ class HabitRootTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
       initialValue: initialValue,
       onTap: onTap,
       textAlign: textAlign,

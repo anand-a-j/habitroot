@@ -11,10 +11,10 @@ part 'reminder.g.dart';
 @HiveType(typeId: 1, adapterName: 'ReminderAdapter')
 abstract class Reminder with _$Reminder {
   const factory Reminder({
-    @HiveField(0) required String id,
+    @HiveField(0) required int id,
     @HiveField(1) required String habitId,
     @HiveField(2) required String time,
-    @HiveField(3) @Default(<Weekday>[]) List<Weekday> days,
+    @HiveField(3) @Default(<int>[]) List<int> weekdays,
     @HiveField(4) @Default(false) bool isEnabled,
   }) = _Reminder;
 

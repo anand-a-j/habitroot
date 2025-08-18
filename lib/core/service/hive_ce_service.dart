@@ -1,3 +1,5 @@
+import 'package:habitroot/core/enum/box_types.dart';
+import 'package:habitroot/features/notification/domain/reminder.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -12,7 +14,11 @@ class HiveService {
       Hive.registerAdapter(HabitAdapter());
     }
 
-   await Hive.openBox<Habit>('habits');
+    if (!Hive.isAdapterRegistered(1)) {
+      Hive.registerAdapter(ReminderAdapter());
+    }
 
+    await Hive.openBox<Habit>(BoxType.habit.name);
+    await Hive.openBox<dynamic>(BoxType.settings.name);
   }
 }

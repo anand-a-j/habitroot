@@ -23,4 +23,5 @@ class Assets {
   static const String messageSquareDiff = "$_baseUrl/message-square-diff.svg";
   static const String analytics = "$_baseUrl/analytics.svg";
   static const String clockPlus = "$_baseUrl/clock-plus.svg";
+  static const String theme = "$_baseUrl/theme.svg";
  }

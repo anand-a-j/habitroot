@@ -15,13 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Reminder {
   @HiveField(0)
-  String get id;
+  int get id;
   @HiveField(1)
   String get habitId;
   @HiveField(2)
   String get time;
   @HiveField(3)
-  List<Weekday> get days;
+  List<int> get weekdays;
   @HiveField(4)
   bool get isEnabled;
 
@@ -43,7 +43,7 @@ mixin _$Reminder {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.habitId, habitId) || other.habitId == habitId) &&
             (identical(other.time, time) || other.time == time) &&
-            const DeepCollectionEquality().equals(other.days, days) &&
+            const DeepCollectionEquality().equals(other.weekdays, weekdays) &&
             (identical(other.isEnabled, isEnabled) ||
                 other.isEnabled == isEnabled));
   }
@@ -51,11 +51,11 @@ mixin _$Reminder {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, habitId, time,
-      const DeepCollectionEquality().hash(days), isEnabled);
+      const DeepCollectionEquality().hash(weekdays), isEnabled);
 
   @override
   String toString() {
-    return 'Reminder(id: $id, habitId: $habitId, time: $time, days: $days, isEnabled: $isEnabled)';
+    return 'Reminder(id: $id, habitId: $habitId, time: $time, weekdays: $weekdays, isEnabled: $isEnabled)';
   }
 }
 
@@ -65,10 +65,10 @@ abstract mixin class $ReminderCopyWith<$Res> {
       _$ReminderCopyWithImpl;
   @useResult
   $Res call(
-      {@HiveField(0) String id,
+      {@HiveField(0) int id,
       @HiveField(1) String habitId,
       @HiveField(2) String time,
-      @HiveField(3) List<Weekday> days,
+      @HiveField(3) List<int> weekdays,
       @HiveField(4) bool isEnabled});
 }
 
@@ -87,14 +87,14 @@ class _$ReminderCopyWithImpl<$Res> implements $ReminderCopyWith<$Res> {
     Object? id = null,
     Object? habitId = null,
     Object? time = null,
-    Object? days = null,
+    Object? weekdays = null,
     Object? isEnabled = null,
   }) {
     return _then(_self.copyWith(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       habitId: null == habitId
           ? _self.habitId
           : habitId // ignore: cast_nullable_to_non_nullable
@@ -103,10 +103,10 @@ class _$ReminderCopyWithImpl<$Res> implements $ReminderCopyWith<$Res> {
           ? _self.time
           : time // ignore: cast_nullable_to_non_nullable
               as String,
-      days: null == days
-          ? _self.days
-          : days // ignore: cast_nullable_to_non_nullable
-              as List<Weekday>,
+      weekdays: null == weekdays
+          ? _self.weekdays
+          : weekdays // ignore: cast_nullable_to_non_nullable
+              as List<int>,
       isEnabled: null == isEnabled
           ? _self.isEnabled
           : isEnabled // ignore: cast_nullable_to_non_nullable
@@ -209,10 +209,10 @@ extension ReminderPatterns on Reminder {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
-            @HiveField(0) String id,
+            @HiveField(0) int id,
             @HiveField(1) String habitId,
             @HiveField(2) String time,
-            @HiveField(3) List<Weekday> days,
+            @HiveField(3) List<int> weekdays,
             @HiveField(4) bool isEnabled)?
         $default, {
     required TResult orElse(),
@@ -220,8 +220,8 @@ extension ReminderPatterns on Reminder {
     final _that = this;
     switch (_that) {
       case _Reminder() when $default != null:
-        return $default(
-            _that.id, _that.habitId, _that.time, _that.days, _that.isEnabled);
+        return $default(_that.id, _that.habitId, _that.time, _that.weekdays,
+            _that.isEnabled);
       case _:
         return orElse();
     }
@@ -243,18 +243,18 @@ extension ReminderPatterns on Reminder {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
     TResult Function(
-            @HiveField(0) String id,
+            @HiveField(0) int id,
             @HiveField(1) String habitId,
             @HiveField(2) String time,
-            @HiveField(3) List<Weekday> days,
+            @HiveField(3) List<int> weekdays,
             @HiveField(4) bool isEnabled)
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Reminder():
-        return $default(
-            _that.id, _that.habitId, _that.time, _that.days, _that.isEnabled);
+        return $default(_that.id, _that.habitId, _that.time, _that.weekdays,
+            _that.isEnabled);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -275,18 +275,18 @@ extension ReminderPatterns on Reminder {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
-            @HiveField(0) String id,
+            @HiveField(0) int id,
             @HiveField(1) String habitId,
             @HiveField(2) String time,
-            @HiveField(3) List<Weekday> days,
+            @HiveField(3) List<int> weekdays,
             @HiveField(4) bool isEnabled)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
       case _Reminder() when $default != null:
-        return $default(
-            _that.id, _that.habitId, _that.time, _that.days, _that.isEnabled);
+        return $default(_that.id, _that.habitId, _that.time, _that.weekdays,
+            _that.isEnabled);
       case _:
         return null;
     }
@@ -300,30 +300,30 @@ class _Reminder extends Reminder {
       {@HiveField(0) required this.id,
       @HiveField(1) required this.habitId,
       @HiveField(2) required this.time,
-      @HiveField(3) final List<Weekday> days = const <Weekday>[],
+      @HiveField(3) final List<int> weekdays = const <int>[],
       @HiveField(4) this.isEnabled = false})
-      : _days = days,
+      : _weekdays = weekdays,
         super._();
   factory _Reminder.fromJson(Map<String, dynamic> json) =>
       _$ReminderFromJson(json);
 
   @override
   @HiveField(0)
-  final String id;
+  final int id;
   @override
   @HiveField(1)
   final String habitId;
   @override
   @HiveField(2)
   final String time;
-  final List<Weekday> _days;
+  final List<int> _weekdays;
   @override
   @JsonKey()
   @HiveField(3)
-  List<Weekday> get days {
-    if (_days is EqualUnmodifiableListView) return _days;
+  List<int> get weekdays {
+    if (_weekdays is EqualUnmodifiableListView) return _weekdays;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_days);
+    return EqualUnmodifiableListView(_weekdays);
   }
 
   @override
@@ -354,7 +354,7 @@ class _Reminder extends Reminder {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.habitId, habitId) || other.habitId == habitId) &&
             (identical(other.time, time) || other.time == time) &&
-            const DeepCollectionEquality().equals(other._days, _days) &&
+            const DeepCollectionEquality().equals(other._weekdays, _weekdays) &&
             (identical(other.isEnabled, isEnabled) ||
                 other.isEnabled == isEnabled));
   }
@@ -362,11 +362,11 @@ class _Reminder extends Reminder {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, habitId, time,
-      const DeepCollectionEquality().hash(_days), isEnabled);
+      const DeepCollectionEquality().hash(_weekdays), isEnabled);
 
   @override
   String toString() {
-    return 'Reminder(id: $id, habitId: $habitId, time: $time, days: $days, isEnabled: $isEnabled)';
+    return 'Reminder(id: $id, habitId: $habitId, time: $time, weekdays: $weekdays, isEnabled: $isEnabled)';
   }
 }
 
@@ -378,10 +378,10 @@ abstract mixin class _$ReminderCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@HiveField(0) String id,
+      {@HiveField(0) int id,
       @HiveField(1) String habitId,
       @HiveField(2) String time,
-      @HiveField(3) List<Weekday> days,
+      @HiveField(3) List<int> weekdays,
       @HiveField(4) bool isEnabled});
 }
 
@@ -400,14 +400,14 @@ class __$ReminderCopyWithImpl<$Res> implements _$ReminderCopyWith<$Res> {
     Object? id = null,
     Object? habitId = null,
     Object? time = null,
-    Object? days = null,
+    Object? weekdays = null,
     Object? isEnabled = null,
   }) {
     return _then(_Reminder(
       id: null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       habitId: null == habitId
           ? _self.habitId
           : habitId // ignore: cast_nullable_to_non_nullable
@@ -416,10 +416,10 @@ class __$ReminderCopyWithImpl<$Res> implements _$ReminderCopyWith<$Res> {
           ? _self.time
           : time // ignore: cast_nullable_to_non_nullable
               as String,
-      days: null == days
-          ? _self._days
-          : days // ignore: cast_nullable_to_non_nullable
-              as List<Weekday>,
+      weekdays: null == weekdays
+          ? _self._weekdays
+          : weekdays // ignore: cast_nullable_to_non_nullable
+              as List<int>,
       isEnabled: null == isEnabled
           ? _self.isEnabled
           : isEnabled // ignore: cast_nullable_to_non_nullable

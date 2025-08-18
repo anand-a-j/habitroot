@@ -11,6 +11,7 @@ class AppThemes with AppColorScheme {
           primary: AppColorScheme.primary,
           onPrimary: AppColorScheme.onPrimary,
           secondary: AppColorScheme.secondary,
+          secondaryFixed: AppColorScheme.secondaryFixed,
           secondaryContainer: AppColorScheme.secondaryContainer,
           onSecondary: AppColorScheme.onSecondary,
           onSecondaryContainer: AppColorScheme.onSecondaryContainer,

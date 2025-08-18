@@ -6,6 +6,7 @@ mixin AppColorScheme {
 
   static const Color secondary = Color(0XFF000000); // Pure Black
   static const Color secondaryContainer = Color(0XFF252527); // Grey variant
+  static const Color secondaryFixed = Color(0xff18181b);// black varaint 
 
   static const Color onSecondary = Color(0XFF0F0F0F); // Black variant
   static const Color onSecondaryContainer =

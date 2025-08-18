@@ -87,14 +87,14 @@ class NotificationService {
     required int minute,
     required List<int> weekdays,
   }) async {
-    for (var weekday in habit.reminder?.days ?? []) {
+    for (int weekday in habit.reminder?.weekdays ?? []) {
       await _notifications.cancel(
-        _generateWeekdayId(int.parse(habit.id), weekday),
+        _generateWeekdayId(habit.reminder?.id ?? 0, weekday),
       );
     }
 
     await scheduleWeekdayReminder(
-      id: int.parse(habit.id),
+      id: habit.reminder?.id ?? 0,
       title: habit.name,
       body: body,
       hour: hour,
@@ -103,8 +103,18 @@ class NotificationService {
     );
   }
 
-  int _generateWeekdayId(int habitId, int weekday) {
-    return habitId * 10 + weekday;
+  Future<void> cancelHabitReminders(Habit habit) async {
+    if (habit.reminder == null) return;
+
+    for (int weekday in habit.reminder!.weekdays) {
+      await _notifications.cancel(
+        _generateWeekdayId(habit.reminder!.id, weekday),
+      );
+    }
+  }
+
+  int _generateWeekdayId(int notificationId, int weekday) {
+    return notificationId + weekday;
   }
 
   tz.TZDateTime _nextInstanceOfWeekdayTime(int hour, int minute, int weekday) {

@@ -17,10 +17,10 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Reminder(
-      id: fields[0] as String,
+      id: (fields[0] as num).toInt(),
       habitId: fields[1] as String,
       time: fields[2] as String,
-      days: fields[3] == null ? [] : (fields[3] as List).cast<Weekday>(),
+      weekdays: fields[3] == null ? [] : (fields[3] as List).cast<int>(),
       isEnabled: fields[4] == null ? false : fields[4] as bool,
     );
   }
@@ -36,7 +36,7 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
       ..writeByte(2)
       ..write(obj.time)
       ..writeByte(3)
-      ..write(obj.days)
+      ..write(obj.weekdays)
       ..writeByte(4)
       ..write(obj.isEnabled);
   }
@@ -57,13 +57,13 @@ class ReminderAdapter extends TypeAdapter<Reminder> {
 // **************************************************************************
 
 _Reminder _$ReminderFromJson(Map<String, dynamic> json) => _Reminder(
-      id: json['id'] as String,
+      id: (json['id'] as num).toInt(),
       habitId: json['habitId'] as String,
       time: json['time'] as String,
-      days: (json['days'] as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$WeekdayEnumMap, e))
+      weekdays: (json['weekdays'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
               .toList() ??
-          const <Weekday>[],
+          const <int>[],
       isEnabled: json['isEnabled'] as bool? ?? false,
     );
 
@@ -71,16 +71,6 @@ Map<String, dynamic> _$ReminderToJson(_Reminder instance) => <String, dynamic>{
       'id': instance.id,
       'habitId': instance.habitId,
       'time': instance.time,
-      'days': instance.days.map((e) => _$WeekdayEnumMap[e]!).toList(),
+      'weekdays': instance.weekdays,
       'isEnabled': instance.isEnabled,
     };
-
-const _$WeekdayEnumMap = {
-  Weekday.mon: 'mon',
-  Weekday.tue: 'tue',
-  Weekday.wed: 'wed',
-  Weekday.thu: 'thu',
-  Weekday.fri: 'fri',
-  Weekday.sat: 'sat',
-  Weekday.sun: 'sun',
-};

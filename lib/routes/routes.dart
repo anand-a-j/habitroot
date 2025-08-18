@@ -3,14 +3,19 @@ import 'package:go_router/go_router.dart';
 import 'package:habitroot/features/home/presentation/screen/dashboard_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/reorder_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/settings_screen.dart';
+import 'package:habitroot/features/settings/presentation/screen/theme_screen.dart';
 import 'package:habitroot/features/splash/splash_screen.dart';
 import 'package:habitroot/routes/page_transition.dart';
+import 'package:hive_ce/hive.dart';
 
+import '../core/enum/box_types.dart';
 import '../features/analytics/presentation/screen/analytics_screen.dart';
 import '../features/habit/domain/habit.dart';
 import '../features/habit/presentation/screen/habit_add_screen.dart';
 import '../features/home/presentation/screen/home_screen.dart';
 import '../features/settings/presentation/screen/archive_screen.dart';
+
+final Box<dynamic> settings = Hive.box(BoxType.settings.name);
 
 final GoRouter router = GoRouter(
   initialLocation: "/",
@@ -85,6 +90,16 @@ final GoRouter router = GoRouter(
         final habit = state.extra as Habit?;
         return SlideTransitionPage(
           page: AnalyticsScreen(habit: habit),
+          beginOffset: const Offset(0, 1),
+        );
+      },
+    ),
+     GoRoute(
+      name: 'theme-screen',
+      path: '/theme',
+      pageBuilder: (context, state) {
+        return SlideTransitionPage(
+          page: const ThemeScreen(),
           beginOffset: const Offset(0, 1),
         );
       },

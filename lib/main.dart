@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitroot/core/utils/snackbar_manager.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/service/hive_ce_service.dart';
@@ -24,14 +25,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      //
-      routerConfig: router,
-      scaffoldMessengerKey: Snack.messengerKey,
-      title: AppConsts.appName,
-      themeMode: ThemeMode.dark,
-      darkTheme: AppThemes.darkThemeData(context),
-    );
+    return ValueListenableBuilder<Box>(
+        valueListenable: settings.listenable(
+          keys: [
+            themeModeKey,
+          ],
+        ),
+        builder: (context, value, child) {
+          final ThemeMode themeMode = ThemeMode.values[value.get(
+            themeModeKey,
+            defaultValue: 0,
+          )];
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            //
+            routerConfig: router,
+            themeMode: themeMode,
+            scaffoldMessengerKey: Snack.messengerKey,
+            title: AppConsts.appName,
+            darkTheme: AppThemes.darkThemeData(context),
+          );
+        });
   }
 }

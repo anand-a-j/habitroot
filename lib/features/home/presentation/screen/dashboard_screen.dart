@@ -21,42 +21,45 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Hero(
-            tag: 'app-logo-hero-tag',
-            child: const SvgBuild(assetImage: Assets.habitRoot),
+      appBar: AppBar(
+        title: Hero(
+          tag: 'app-logo-hero-tag',
+          child: const SvgBuild(
+            assetImage: Assets.habitRoot,
           ),
-          actions: [
-            // GestureDetector(
-            //     onTap: () {
-            //       NotificationService.showTestNotification();
-            //     },
-            //     child: Icon(
-            //       Icons.add,
-            //       color: context.onPrimary,
-            //     )),
-            // const SizedBox(width: 40),
-            GestureDetector(
-              onTap: () {
-                context.pushNamed('analytics-screen');
-              },
-              child: SvgBuild(
-                assetImage: Assets.analytics,
-              ),
-            ),
-            const SizedBox(width: AppConsts.pMedium),
-            GestureDetector(
-              onTap: () {
-                context.pushNamed('settings-screen');
-              },
-              child: SvgBuild(
-                assetImage: Assets.settings,
-              ),
-            ),
-            const SizedBox(width: AppConsts.pSide),
-          ],
         ),
-        body: HabitListView(),
-        floatingActionButton: DashAddHabitButton());
+        actions: [
+          // GestureDetector(
+          //     onTap: () {
+          //       NotificationService.showTestNotification();
+          //     },
+          //     child: Icon(
+          //       Icons.add,
+          //       color: context.onPrimary,
+          //     )),
+          // const SizedBox(width: 40),
+          GestureDetector(
+            onTap: () {
+              context.pushNamed('analytics-screen');
+            },
+            child: SvgBuild(
+              assetImage: Assets.analytics,
+            ),
+          ),
+          const SizedBox(width: AppConsts.pMedium),
+          GestureDetector(
+            onTap: () {
+              context.pushNamed('settings-screen');
+            },
+            child: SvgBuild(
+              assetImage: Assets.settings,
+            ),
+          ),
+          const SizedBox(width: AppConsts.pSide),
+        ],
+      ),
+      body: HabitListView(),
+      floatingActionButton: DashAddHabitButton(),
+    );
   }
 }

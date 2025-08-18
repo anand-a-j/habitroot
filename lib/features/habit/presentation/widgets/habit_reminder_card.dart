@@ -5,7 +5,6 @@ import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/enum/weekday.dart';
 import 'package:habitroot/core/extension/common.dart';
 import 'package:habitroot/core/utils/snackbar_manager.dart';
-import 'package:habitroot/features/habit/presentation/utils/habit_utils.dart';
 import 'package:habitroot/features/notification/data/notification_service.dart';
 import '../../../../core/components/weekday_listview.dart';
 
@@ -14,14 +13,20 @@ class HabitReminderCard extends StatefulWidget {
     super.key,
     required this.selectedDays,
     required this.onChange,
-    required this.onTimeChanged, // ✅ NEW
+    required this.onTimeChanged,
     required this.onToggle,
+    this.initialReminderOn = false, // ✅ from parent
+    this.initialTime = const TimeOfDay(hour: 12, minute: 0), // ✅ from parent
   });
 
   final List<Weekday> selectedDays;
+
   final void Function(List<Weekday>) onChange;
-  final void Function(TimeOfDay) onTimeChanged; // ✅ NEW
-  final void Function(bool) onToggle; // ✅ NEW
+  final void Function(TimeOfDay) onTimeChanged;
+  final void Function(bool) onToggle;
+
+  final bool initialReminderOn; // ✅
+  final TimeOfDay initialTime; // ✅
 
   @override
   State<HabitReminderCard> createState() => _HabitReminderCardState();
@@ -29,9 +34,15 @@ class HabitReminderCard extends StatefulWidget {
 
 class _HabitReminderCardState extends State<HabitReminderCard>
     with TickerProviderStateMixin {
-  final ValueNotifier<bool> _isReminderOn = ValueNotifier<bool>(false);
-  final ValueNotifier<TimeOfDay> _selectedTime =
-      ValueNotifier<TimeOfDay>(TimeOfDay(hour: 12, minute: 0));
+  late final ValueNotifier<bool> _isReminderOn;
+  late final ValueNotifier<TimeOfDay> _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _isReminderOn = ValueNotifier<bool>(widget.initialReminderOn);
+    _selectedTime = ValueNotifier<TimeOfDay>(widget.initialTime);
+  }
 
   @override
   void dispose() {
@@ -39,6 +50,7 @@ class _HabitReminderCardState extends State<HabitReminderCard>
     _selectedTime.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

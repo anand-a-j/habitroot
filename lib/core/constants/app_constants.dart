@@ -20,3 +20,6 @@ class AppConsts {
   static const double pUltraLarge = 40;
 
 }
+
+// keys
+const String themeModeKey = 'key_theme_mode';
