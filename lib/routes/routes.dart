@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:habitroot/features/home/presentation/screen/dashboard_screen.dart';
+import 'package:habitroot/features/settings/presentation/screen/general_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/reorder_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/settings_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/theme_screen.dart';
@@ -94,12 +95,22 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-     GoRoute(
+    GoRoute(
       name: 'theme-screen',
       path: '/theme',
       pageBuilder: (context, state) {
         return SlideTransitionPage(
           page: const ThemeScreen(),
+          beginOffset: const Offset(0, 1),
+        );
+      },
+    ),
+    GoRoute(
+      name: 'general-screen',
+      path: '/general',
+      pageBuilder: (context, state) {
+        return SlideTransitionPage(
+          page: const GeneralScreen(),
           beginOffset: const Offset(0, 1),
         );
       },
