@@ -8,6 +8,8 @@ enum Weekday {
   sun,
 }
 
+final List<String> startWeekdays = ["Sunday", "Monday", "Saturday"];
+
 String getAbbreviation(Weekday day) {
   switch (day) {
     case Weekday.mon:
@@ -61,6 +63,7 @@ List<int> convertWeekdaysToInts(List<Weekday> days) {
 
   return days.map((day) => mapping[day]!).toList();
 }
+
 
 List<Weekday> convertIntsToWeekdays(List<int> ints) {
   final mapping = {

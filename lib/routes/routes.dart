@@ -4,7 +4,6 @@ import 'package:habitroot/features/home/presentation/screen/dashboard_screen.dar
 import 'package:habitroot/features/settings/presentation/screen/general_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/reorder_screen.dart';
 import 'package:habitroot/features/settings/presentation/screen/settings_screen.dart';
-import 'package:habitroot/features/settings/presentation/screen/theme_screen.dart';
 import 'package:habitroot/features/splash/splash_screen.dart';
 import 'package:habitroot/routes/page_transition.dart';
 import 'package:hive_ce/hive.dart';
@@ -91,16 +90,6 @@ final GoRouter router = GoRouter(
         final habit = state.extra as Habit?;
         return SlideTransitionPage(
           page: AnalyticsScreen(habit: habit),
-          beginOffset: const Offset(0, 1),
-        );
-      },
-    ),
-    GoRoute(
-      name: 'theme-screen',
-      path: '/theme',
-      pageBuilder: (context, state) {
-        return SlideTransitionPage(
-          page: const ThemeScreen(),
           beginOffset: const Offset(0, 1),
         );
       },

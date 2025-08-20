@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:habitroot/core/components/svg_build.dart';
-import 'package:habitroot/core/constants/assets.dart';
 import 'package:habitroot/core/extension/common.dart';
-import 'package:habitroot/core/extension/theme_mode.dart';
+import 'package:habitroot/routes/routes.dart';
 
-import '../../../../core/components/habitroot_appbar.dart';
+import '../../../../core/components/svg_build.dart';
 import '../../../../core/constants/app_constants.dart';
-import '../../../../routes/routes.dart';
+import '../../../../core/constants/assets.dart';
+import '../../../../core/enum/weekday.dart';
 
-void showThemeBottomSheet(BuildContext context) {
+void showWeekStartBottomSheet(BuildContext context) {
   showModalBottomSheet<ThemeMode>(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -17,24 +15,22 @@ void showThemeBottomSheet(BuildContext context) {
     ),
     backgroundColor: context.secondaryFixed,
     isScrollControlled: true,
-    builder: (context) => const ThemeBottomSheet(),
-  ).then((selectedTheme) {
-    if (selectedTheme != null) {
-      // do something with selectedTheme if needed
-    }
-  });
+    builder: (context) => const WeekStartSheet(),
+  );
 }
 
-class ThemeBottomSheet extends StatefulWidget {
-  const ThemeBottomSheet({super.key});
+class WeekStartSheet extends StatefulWidget {
+  const WeekStartSheet({super.key});
 
   @override
-  State<ThemeBottomSheet> createState() => _ThemeBottomSheetState();
+  State<WeekStartSheet> createState() => _WeekStartSheetState();
 }
 
-class _ThemeBottomSheetState extends State<ThemeBottomSheet> {
-  ValueNotifier<ThemeMode> _currentIndex = ValueNotifier(
-    ThemeMode.values[settings.get(themeModeKey, defaultValue: 0)],
+class _WeekStartSheetState extends State<WeekStartSheet> {
+
+
+  final ValueNotifier<int> _currentIndex = ValueNotifier(
+    settings.get(weekStartKey, defaultValue: 0),
   );
 
   @override
@@ -57,7 +53,7 @@ class _ThemeBottomSheetState extends State<ThemeBottomSheet> {
                 ),
               ),
               Text(
-                "Theme",
+                "Week Start On",
                 style: context.bodyLarge?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -67,16 +63,16 @@ class _ThemeBottomSheetState extends State<ThemeBottomSheet> {
           const SizedBox(height: 30),
           Column(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(ThemeMode.values.length, (index) {
+            children: List.generate(startWeekdays.length, (index) {
               return ValueListenableBuilder(
                 valueListenable: _currentIndex,
                 builder: (context, value, child) {
                   return _ThemeButton(
-                    title: ThemeMode.values[index].stringValue,
-                    isSelected: value == ThemeMode.values[index],
+                    title: startWeekdays[index],
+                    isSelected: value == index,
                     onTap: () {
-                      _currentIndex.value = ThemeMode.values[index];
-                      settings.put(themeModeKey, _currentIndex.value.index);
+                      _currentIndex.value = index;
+                      settings.put(weekStartKey, _currentIndex.value);
 
                       Navigator.pop(context);
                     },
@@ -86,48 +82,6 @@ class _ThemeBottomSheetState extends State<ThemeBottomSheet> {
             }),
           ),
         ],
-      ),
-    );
-  }
-}
-
-
-// Theme as screeen
-class ThemeScreen extends StatefulWidget {
-  const ThemeScreen({super.key});
-
-  @override
-  State<ThemeScreen> createState() => _ThemeScreenState();
-}
-
-class _ThemeScreenState extends State<ThemeScreen> {
-  ValueNotifier<ThemeMode> _currentIndex = ValueNotifier(
-    ThemeMode.values[settings.get(themeModeKey, defaultValue: 0)],
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: HabitRootAppBar(
-        leadingOnTap: () => context.pop(),
-        title: "Theme",
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppConsts.pSide),
-        children: List.generate(ThemeMode.values.length, (index) {
-          return ValueListenableBuilder(
-              valueListenable: _currentIndex,
-              builder: (context, value, child) {
-                return _ThemeButton(
-                  title: ThemeMode.values[index].stringValue,
-                  isSelected: value == ThemeMode.values[index],
-                  onTap: () {
-                    _currentIndex.value = ThemeMode.values[index];
-                    settings.put(themeModeKey, _currentIndex.value.index);
-                  },
-                );
-              });
-        }),
       ),
     );
   }

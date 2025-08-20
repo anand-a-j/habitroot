@@ -18,8 +18,8 @@ class AppConsts {
   static const double pExtraLarge = 30;
   static const double pUltra = 35;
   static const double pUltraLarge = 40;
-
 }
 
 // keys
 const String themeModeKey = 'key_theme_mode';
+const String weekStartKey = 'key_week_start';

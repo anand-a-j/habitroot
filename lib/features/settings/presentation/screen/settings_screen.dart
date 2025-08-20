@@ -3,11 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:habitroot/core/constants/app_constants.dart';
 import 'package:habitroot/core/constants/assets.dart';
 import 'package:habitroot/core/constants/strings.dart';
-import 'package:habitroot/features/settings/presentation/screen/theme_screen.dart'
-    show showThemeBottomSheet;
+
 import 'package:habitroot/features/settings/presentation/widgets/settings_card.dart';
 
 import '../../../../core/components/core_components.dart';
+import '../widgets/theme_sheet.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
