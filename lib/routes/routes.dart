@@ -17,6 +17,8 @@ import '../features/settings/presentation/screen/archive_screen.dart';
 
 final Box<dynamic> settings = Hive.box(BoxType.settings.name);
 
+
+
 final GoRouter router = GoRouter(
   initialLocation: "/",
   observers: [HeroController()],

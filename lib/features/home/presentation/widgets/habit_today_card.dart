@@ -15,16 +15,16 @@ import '../../../habit/presentation/provider/habit_provider.dart';
 import '../components/habit_details_bottom_sheet.dart';
 import 'habit_mark_button.dart';
 
-final heapCardHabitId = Provider<String>((ref) => throw UnimplementedError());
+final todayCardHabitId = Provider<String>((ref) => throw UnimplementedError());
 
-class HabitHeapCard extends ConsumerWidget {
-  const HabitHeapCard({super.key});
+class HabitTodayCard extends ConsumerWidget {
+  const HabitTodayCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _size = MediaQuery.sizeOf(context);
 
-    final habitId = ref.watch(heapCardHabitId);
+    final habitId = ref.watch(todayCardHabitId);
     final habit = ref.watch(habitByIdProvider(habitId));
     final habitColor = habit.color;
 
@@ -113,12 +113,12 @@ class HabitHeapCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppConsts.pMedium),
-                  HeatMapCalendar(
-                      startDate: startDate,
-                      endDate: DateTime.now(),
-                      events: events,
-                      baseColor: Color(habitColor)),
+                  // const SizedBox(height: AppConsts.pMedium),
+                  // HeatMapCalendar(
+                  //     startDate: startDate,
+                  //     endDate: DateTime.now(),
+                  //     events: events,
+                  //     baseColor: Color(habitColor)),
                 ],
               ),
             ),
@@ -128,44 +128,3 @@ class HabitHeapCard extends ConsumerWidget {
     );
   }
 }
-
-// class _HabitMarkButton extends ConsumerWidget {
-//   const _HabitMarkButton({
-//     required this.backgroundColor,
-//     required this.habitId,
-//   });
-
-//   final Color backgroundColor;
-//   final String habitId;
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final isCompletedToday = ref.watch(
-//       habitByIdProvider(habitId).select((h) => h.isCompletedToday),
-//     );
-
-//     return GestureDetector(
-//       onTap: () {
-//         HapticFeedback.lightImpact();
-//         final habit = ref.read(habitByIdProvider(habitId));
-//         final updatedHabit = habit.toggleCompleted();
-//         ref.read(habitProvider.notifier).updateHabit(updatedHabit);
-//       },
-//       child: AnimatedContainer(
-//         duration: const Duration(milliseconds: 250),
-//         curve: Curves.easeInOut,
-//         width: 40,
-//         height: 40,
-//         decoration: BoxDecoration(
-//           color: isCompletedToday
-//               ? backgroundColor
-//               : backgroundColor.withValues(alpha: 0.2),
-//           borderRadius: BorderRadius.circular(AppConsts.rMacro),
-//         ),
-//         child: const Center(
-//           child: SvgBuild(assetImage: Assets.tick),
-//         ),
-//       ),
-//     );
-//   }
-// }

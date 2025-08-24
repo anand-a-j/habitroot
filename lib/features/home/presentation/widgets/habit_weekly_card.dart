@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitroot/core/components/core_components.dart';
 import 'package:habitroot/core/constants/constants.dart';
 import 'package:habitroot/core/enum/date_event.dart';
+import 'package:habitroot/core/enum/weekday.dart';
 import 'package:habitroot/core/extension/common.dart';
 import 'package:habitroot/core/extension/habit_extension.dart';
 import 'package:habitroot/features/calendar/domain/calendar_event.dart';
@@ -15,16 +16,16 @@ import '../../../habit/presentation/provider/habit_provider.dart';
 import '../components/habit_details_bottom_sheet.dart';
 import 'habit_mark_button.dart';
 
-final heapCardHabitId = Provider<String>((ref) => throw UnimplementedError());
+final weeklyCardHabitId = Provider<String>((ref) => throw UnimplementedError());
 
-class HabitHeapCard extends ConsumerWidget {
-  const HabitHeapCard({super.key});
+class HabitWeeklyCard extends ConsumerWidget {
+  const HabitWeeklyCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final _size = MediaQuery.sizeOf(context);
 
-    final habitId = ref.watch(heapCardHabitId);
+    final habitId = ref.watch(weeklyCardHabitId);
     final habit = ref.watch(habitByIdProvider(habitId));
     final habitColor = habit.color;
 
@@ -106,19 +107,48 @@ class HabitHeapCard extends ConsumerWidget {
                             ),
                         ],
                       ),
-                      const Spacer(),
-                      HabitMarkButton(
-                        backgroundColor: Color(habitColor),
-                        habitId: habit.id,
-                      ),
+                      // const Spacer(),
+                      // HabitMarkButton(
+                      //   backgroundColor: Color(habitColor),
+                      //   habitId: habit.id,
+                      // ),
                     ],
                   ),
+
                   const SizedBox(height: AppConsts.pMedium),
-                  HeatMapCalendar(
-                      startDate: startDate,
-                      endDate: DateTime.now(),
-                      events: events,
-                      baseColor: Color(habitColor)),
+                  Row(
+                    spacing: 10,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(
+                      Weekday.values.length,
+                      (index) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Text(
+                              getAbbreviation(Weekday.values[index]  ),
+                              style: context.bodyMedium,
+                            ),
+                            Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Color(habitColor).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  )
+                  // HeatMapCalendar(
+                  //     startDate: startDate,
+                  //     endDate: DateTime.now(),
+                  //     events: events,
+                  //     baseColor: Color(habitColor)),
                 ],
               ),
             ),
@@ -128,44 +158,3 @@ class HabitHeapCard extends ConsumerWidget {
     );
   }
 }
-
-// class _HabitMarkButton extends ConsumerWidget {
-//   const _HabitMarkButton({
-//     required this.backgroundColor,
-//     required this.habitId,
-//   });
-
-//   final Color backgroundColor;
-//   final String habitId;
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final isCompletedToday = ref.watch(
-//       habitByIdProvider(habitId).select((h) => h.isCompletedToday),
-//     );
-
-//     return GestureDetector(
-//       onTap: () {
-//         HapticFeedback.lightImpact();
-//         final habit = ref.read(habitByIdProvider(habitId));
-//         final updatedHabit = habit.toggleCompleted();
-//         ref.read(habitProvider.notifier).updateHabit(updatedHabit);
-//       },
-//       child: AnimatedContainer(
-//         duration: const Duration(milliseconds: 250),
-//         curve: Curves.easeInOut,
-//         width: 40,
-//         height: 40,
-//         decoration: BoxDecoration(
-//           color: isCompletedToday
-//               ? backgroundColor
-//               : backgroundColor.withValues(alpha: 0.2),
-//           borderRadius: BorderRadius.circular(AppConsts.rMacro),
-//         ),
-//         child: const Center(
-//           child: SvgBuild(assetImage: Assets.tick),
-//         ),
-//       ),
-//     );
-//   }
-// }

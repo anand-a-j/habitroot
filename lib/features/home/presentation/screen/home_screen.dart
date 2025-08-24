@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: HabitListView(),
+
       //  Padding(
       //   padding: const EdgeInsets.symmetric(horizontal: AppConsts.pSide),
       //   child: Column(
